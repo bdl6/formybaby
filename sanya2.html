@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>三亚六日游行程</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sand: '#F5EFE0',
+            ocean: '#0A9396',
+            wave: '#94D2BD',
+            sun: '#EE9B00',
+            sky: '#E9D8A6',
+            dark: '#005F73',
+            sanyaBlue: '#1E88E5'
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .day-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .day-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .scroll-animate {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+      }
+      .scroll-animate.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .delay-100 { transition-delay: 100ms; }
+      .delay-200 { transition-delay: 200ms; }
+      .delay-300 { transition-delay: 300ms; }
+      .btn-pulse {
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-pulse::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translate(-50%, -50%) scale(0);
+        border-radius: 50%;
+        transition: transform 0.6s ease;
+      }
+      .btn-pulse:hover::after {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      .img-zoom {
+        overflow: hidden;
+      }
+      .img-zoom img {
+        transition: transform 0.5s ease;
+      }
+      .img-zoom:hover img {
+        transform: scale(1.05);
+      }
+      .nav-icon {
+        transition: transform 0.3s ease, color 0.3s ease;
+      }
+      .nav-item:hover .nav-icon {
+        transform: rotate(15deg) scale(1.2);
+      }
+      .memory-card {
+        transition: all 0.3s ease;
+      }
+      .memory-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      .memory-card.deleting {
+        animation: deleteAnim 0.5s forwards;
+      }
+      .footer-wave {
+        animation: footerWave 10s ease-in-out infinite;
+        transform-origin: center bottom;
+      }
+      .cube-container {
+        perspective: 1200px;
+        width: 100%;
+        height: 100%;
+      }
+      .cube-box {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+      }
+      .cube-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      }
+      .cube-front {
+        transform: rotateY(0deg);
+      }
+      .cube-back {
+        transform: rotateY(180deg);
+      }
+      .cube-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .flipped {
+        transform: rotateY(180deg);
+      }
+      .cube-overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        transition: background-color 0.3s ease;
+      }
+      .cube-box:hover .cube-overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      .toast {
+        transform: translateY(-100px);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+      .toast.active {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    @keyframes ripple {
+      0% {
+        box-shadow: 0 0 0 0 rgba(30, 136, 229, 0.4),
+                    0 0 0 10px rgba(30, 136, 229, 0.3),
+                    0 0 0 20px rgba(30, 136, 229, 0.2);
+      }
+      100% {
+        box-shadow: 0 0 0 10px rgba(30, 136, 229, 0.3),
+                    0 0 0 20px rgba(30, 136, 229, 0.2),
+                    0 0 0 30px rgba(30, 136, 229, 0);
+      }
+    }
+    .animate-ripple {
+      animation: ripple 2s infinite;
+    }
+    
+    @keyframes deleteAnim {
+      0% {
+        opacity: 1;
+        transform: translateX(0);
+        height: auto;
+      }
+      30% {
+        opacity: 0.7;
+        transform: translateX(-10px);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(100%);
+        height: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    }
+    
+    @keyframes footerWave {
+      0% { transform: scaleY(1); }
+      50% { transform: scaleY(1.05); }
+      100% { transform: scaleY(1); }
+    }
+    .carousel-item {
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.carousel-item.active {
+    opacity: 1;
+    z-index: 1;
+}
+  </style>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-sand font-sans text-dark overflow-x-hidden">
+  <!-- 导航栏 -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#"
+        class="text-white text-2xl font-bold text-shadow transform transition-transform hover:scale-105 flex items-center">
+        <i class="fa fa-paper-plane-o mr-2 animate-float"></i>
+        三亚之旅
+      </a>
+
+      <!-- 汉堡菜单按钮 -->
+      <button id="menuBtn"
+        class="text-white text-2xl focus:outline-none transition-transform hover:rotate-90 duration-300">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- 移动端菜单 -->
+    <div id="mobileMenu"
+      class="fixed inset-0 bg-dark bg-opacity-95 z-50 transform translate-x-full transition-transform duration-300 flex flex flex-col justify-center items-center">
+      <button id="closeMenu"
+        class="absolute top-6 right-6 text-white text-2xl transition-transform hover:rotate-90 duration-300">
+        <i class="fa fa-times"></i>
+      </button>
+      <ul class="space-y-8 text-center">
+        <li class="nav-item">
+          <a href="#home"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-home nav-icon mr-2"></i>首页
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#day1"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-calendar-day nav-icon mr-2"></i>第一天
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#day2"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-calendar-day nav-icon mr-2"></i>第二天
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#day3"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-calendar-day nav-icon mr-2"></i>第三天
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#day4"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-calendar-day nav-icon mr-2"></i>第四天
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#day5"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-calendar-day nav-icon mr-2"></i>第五天
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#day6"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-calendar-day nav-icon mr-2"></i>第六天
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#memories"
+            class="text-white text-xl hover:text-sun transition-colors inline-block transform hover:scale-110 duration-300">
+            <i class="fa fa-bookmark nav-icon mr-2"></i>旅行记忆
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 英雄区域 - 带轮播图 -->
+  <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- 轮播图容器 -->
+    <div class="absolute inset-0 z-0" id="heroCarousel">
+      <!-- 轮播图片1 - 三亚亚龙湾 -->
+      <div class="carousel-item active">
+        <img src="./assets/微信图片_20250802193915_72.jpg" alt="大东海的夜晚" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-dark bg-opacity-40"></div>
+      </div>
+      <!-- 轮播图片2 - 三亚蜈支洲岛 -->
+      <div class="carousel-item">
+        <img src="./assets/day05-2.jpg" alt="蜈支洲岛明信片" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-dark bg-opacity-40"></div>
+      </div>
+      <!-- 轮播图片3 - 三亚日落 -->
+      <div class="carousel-item">
+        <img src="./assets/day04-1.jpg" alt="日落酒店" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-dark bg-opacity-40"></div>
+      </div>
+      <!-- 轮播图片4 - 三亚水上项目 -->
+      <div class="carousel-item">
+        <img src="./assets/微信图片_20250802193915_63.jpg" alt="椰子树" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-dark bg-opacity-40"></div>
+      </div>
+
+      <!-- 轮播指示器 -->
+      <div class="absolute bottom-20 left-0 right-0 flex justify-center space-x-2 z-10">
+        <button class="carousel-indicator w-3 h-3 rounded-full bg-white opacity-100" data-index="0"></button>
+        <button class="carousel-indicator w-3 h-3 rounded-full bg-white opacity-50" data-index="1"></button>
+        <button class="carousel-indicator w-3 h-3 rounded-full bg-white opacity-50" data-index="2"></button>
+        <button class="carousel-indicator w-3 h-3 rounded-full bg-white opacity-50" data-index="3"></button>
+      </div>
+    </div>
+
+    <!-- 波浪装饰 -->
+    <div class="absolute bottom-0 left-0 right-0 h-16 z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="w-full h-full">
+        <path fill="#F5EFE0" fill-opacity="1"
+          d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,208C672,213,768,203,864,181.3C960,160,1056,128,1152,122.7C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+        </path>
+      </svg>
+    </div>
+
+    <!-- 主标题 -->
+    <div class="relative z-20 text-center px-4">
+      <h1 class="text-[clamp(2.5rem,8vw,4rem)] font-bold text-white leading-tight text-shadow mb-4">
+        回顾<span class="text-sanyaBlue">三亚</span>美景
+      </h1>
+      <p class="text-[clamp(1rem,3vw,1.25rem)] text-white text-shadow mb-8 max-w-md mx-auto">
+        重温三亚之行，我们美好的回忆
+      </p>
+      <div class="flex flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#day1"
+          class="px-8 py-3 bg-sanyaBlue text-white rounded-full font-medium hover:bg-opacity-90 transform hover:-translate-y-1 transition-all">
+          点击开始
+        </a>
+      </div>
+    </div>
+
+
+  </section>
+
+  <!-- 波浪装饰 -->
+  <div class="absolute bottom-0 left-0 right-0 h-16 z-10">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="w-full h-full">
+      <path fill="#F5EFE0" fill-opacity="1"
+        d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,208C672,213,768,203,864,181.3C960,160,1056,128,1152,122.7C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+      </path>
+    </svg>
+  </div>
+
+
+
+  <!-- 第一天 -->
+  <section id="day1" class="py-20 bg-sand">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16 scroll-animate">
+        <span
+          class="inline-block px-4 py-1 bg-sanyaBlue text-white rounded-full text-sm font-medium mb-4 animate-ripple">第一天</span>
+        <h2 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-dark mb-4">抵达三亚凤凰机场</h2>
+        <div class="w-20 h-1 bg-ocean mx-auto"></div>
+      </div>
+
+      <div class="scroll-animate delay-100 mb-12">
+        <h3 class="text-[clamp(1.3rem,4vw,1.8rem)] font-semibold text-dark mb-6 text-center">东方夏威夷的魅力初体验</h3>
+        <p class="text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto text-center">
+          抵达三亚凤凰国际机场后，前往三亚湾汉庭酒店办理入住。稍作休息后，下午漫步在椰梦长廊的白沙滩上，感受细腻的沙粒和温暖的海水，拍了不少美丽的照片，晚上在第一夜场夜市感受当地特色美食，开启完美的三亚之旅。
+        </p>
+      </div>
+
+      <!-- 第一天图片展示区 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- 图片1 -->
+        <div class="h-64 scroll-animate">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-1">
+              <div class="cube-face cube-front">
+                <img src="./assets/day01-1.jpg" alt="亚龙湾全景" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-xl font-bold mb-2">椰梦长廊</h3>
+                  <p class="text-gray-300 text-sm">点击翻转查看更多</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day01-3.jpg" alt="亚龙湾日落" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="h-64 scroll-animate delay-100">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-2">
+              <div class="cube-face cube-front">
+                <img src="./assets/day01-2.jpg" alt="亚龙湾沙滩" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">坐在沙滩上吹海风</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/微信图片_20250802193915_64.jpg" alt="清澈海水" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="h-64 scroll-animate delay-300">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-4">
+              <div class="cube-face cube-front">
+                <img src="./assets/IMG_2416.JPG" alt="亚龙湾酒店" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">美女宝宝</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day01-4.JPG" alt="酒店泳池" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="h-64 scroll-animate delay-200">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-3">
+              <div class="cube-face cube-front">
+                <img src="./assets/微信图片_20250802193915_62.jpg" alt="海鲜大餐" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">夜市美食</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/IMG_2443.JPG" alt="三亚特色美食" class="cube-img">
+                <div class="cube-overlay">
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8">
+        <div class="bg-white rounded-xl p-6 shadow-lg scroll-animate transform hover:shadow-xl transition-all">
+          <h3 class="text-xl font-semibold mb-4 flex items-center">
+            <i class="fa fa-clock-o text-ocean mr-2"></i> 行程安排
+          </h3>
+          <ul class="space-y-4">
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">上午</span>
+              <span>抵达三亚，前往酒店办理入住</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">中午</span>
+              <span>点了外卖抱罗粉，好吃</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">下午</span>
+              <span>椰梦长廊漫步</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">傍晚</span>
+              <span>拍照出片拍拍拍</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">晚上</span>
+              <span>夜市狂炫</span>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 第二天 -->
+  <section id="day2" class="py-20 bg-gradient-to-b from-sand to-sky/30">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16 scroll-animate">
+        <span
+          class="inline-block px-4 py-1 bg-sanyaBlue text-white rounded-full text-sm font-medium mb-4 animate-ripple">第二天</span>
+        <h2 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-dark mb-4">大东海游览</h2>
+        <div class="w-20 h-1 bg-ocean mx-auto mb-6"></div>
+        <p class="text-gray-700 max-w-2xl mx-auto">
+          吃到了好吃的椰子鸡，感受大东海细软的沙子，晚上靠着大东海的小酒吧小酌
+        </p>
+      </div>
+
+      <!-- 第二天图片展示区 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- 图片1 -->
+        <div class="h-64 scroll-animate">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-1">
+              <div class="cube-face cube-front">
+                <img src="./assets/day02-1.jpg" alt="亚龙湾全景" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-xl font-bold mb-2">好吃的椰子鸡</h3>
+                  <p class="text-gray-300 text-sm">点击翻转查看更多</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day2-3.JPG" alt="亚龙湾日落" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="h-64 scroll-animate delay-100">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-2">
+              <div class="cube-face cube-front">
+                <img src="./assets/day02-2.jpg" alt="亚龙湾沙滩" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">酷酷宝贝戴墨镜</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day2-7.jpg" alt="清澈海水" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="h-64 scroll-animate delay-300">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-4">
+              <div class="cube-face cube-front">
+                <img src="./assets/day2-8.JPG" alt="亚龙湾酒店" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">内有神秘宝宝</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day2-4.JPG" alt="酒店泳池" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="h-64 scroll-animate delay-200">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-3">
+              <div class="cube-face cube-front">
+                <img src="./assets/day2-5.JPG" alt="海鲜大餐" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">大东海夜景</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day2-6.JPG" alt="三亚特色美食" class="cube-img">
+                <div class="cube-overlay">
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- 活动卡片 1 -->
+        <div
+          class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 day-card scroll-animate">
+          <div class="p-6">
+            <div class="flex items-center mb-3">
+              <i class="fa fa-tint text-ocean mr-2 transform transition-transform group-hover:rotate-12"></i>
+              <h3 class="text-xl font-semibold">今日总结</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              椰子鸡的鸡肉鲜香，汤汁浓郁，还有大转盘，囊括各种小吃，大东海沙子柔软，是与宝宝玩水的好地方（但是不小心惹她生气），晚上吹着海风，吃着烧烤，喝着酒，两个人敞开心扉，不快也就随风飘散了
+            </p>
+            <p class="text-sm text-gray-500">
+              提示：晚上不能看椰子鸡，太香了！！！
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 第三天 -->
+  <section id="day3" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16 scroll-animate">
+        <span
+          class="inline-block px-4 py-1 bg-sanyaBlue text-white rounded-full text-sm font-medium mb-4 animate-ripple">第三天</span>
+        <h2 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-dark mb-4">太阳湾冒险</h2>
+        <div class="w-20 h-1 bg-ocean mx-auto mb-6"></div>
+        <p class="text-gray-700 max-w-2xl mx-auto">
+          来到了一眼惊艳的太阳湾，这里也是美照产出圣地，经历了一些小小的不愉快，但晚上解开心结，吃了一顿滋滋冒油的荔枝木烤鸡
+        </p>
+      </div>
+
+      <!-- 第三天图片展示区 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- 图片1 -->
+        <div class="h-64 scroll-animate">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-1">
+              <div class="cube-face cube-front">
+                <img src="./assets/day03-1.jpg" alt="亚龙湾全景" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-xl font-bold mb-2">功夫熊猫</h3>
+                  <p class="text-gray-300 text-sm">点击翻转查看更多</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day03-2.jpg" alt="亚龙湾日落" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="h-64 scroll-animate delay-100">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-2">
+              <div class="cube-face cube-front">
+                <img src="./assets/day03-3.JPG" alt="亚龙湾沙滩" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">男友力</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day03-4.JPG" alt="清澈海水" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="h-64 scroll-animate delay-300">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-4">
+              <div class="cube-face cube-front">
+                <img src="./assets/day03-5.JPG" alt="亚龙湾酒店" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">绝世美景</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day03-6.JPG" alt="酒店泳池" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="h-64 scroll-animate delay-200">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-3">
+              <div class="cube-face cube-front">
+                <img src="./assets/day03-7.JPG" alt="海鲜大餐" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">馋人大鸡腿</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day03-8.JPG" alt="三亚特色美食" class="cube-img">
+                <div class="cube-overlay">
+                  <p class="text-lg"> 内有小宝</p>
+                  <p class="text-gray-300 text-sm">点击返回</p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第四天 -->
+  <section id="day4" class="py-20 bg-ocean bg-opacity-10">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16 scroll-animate">
+        <span
+          class="inline-block px-4 py-1 bg-sanyaBlue text-white rounded-full text-sm font-medium mb-4 animate-ripple">第四天</span>
+        <h2 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-dark mb-4">入住海棠湾酒店</h2>
+        <div class="w-20 h-1 bg-ocean mx-auto mb-6"></div>
+        <p class="text-gray-700 max-w-2xl mx-auto">
+          酒店很高端大气，里面游玩设施丰富，就是吃饭不太方便，点外卖解决，总体还是很好的
+        </p>
+      </div>
+
+      <!-- 第四天图片展示区 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- 图片1 -->
+        <!-- 图片1 -->
+        <div class="h-64 scroll-animate">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-1">
+              <div class="cube-face cube-front">
+                <img src="./assets/day04-1.jpg" alt="亚龙湾全景" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-xl font-bold mb-2">大泳池</h3>
+                  <p class="text-gray-300 text-sm">点击翻转查看更多</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day04-2.jpg" alt="亚龙湾日落" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="h-64 scroll-animate delay-100">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-2">
+              <div class="cube-face cube-front">
+                <img src="./assets/day04-3.jpg" alt="亚龙湾沙滩" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">沙滩躺椅</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day04-4.JPG" alt="清澈海水" class="cube-img">
+                <div class="cube-overlay">
+
+                  <h3 class="text-lg font-bold mb-2">守门员宝</h3>
+                  <p class="text-gray-300 text-sm">点击返回</p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="h-64 scroll-animate delay-300">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-4">
+              <div class="cube-face cube-front">
+                <img src="./assets/day04-5 (2).JPG" alt="亚龙湾酒店" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">台球宝宝</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day04-6 (2).JPG" alt="酒店泳池" class="cube-img">
+                <div class="cube-overlay">
+
+                  <h3 class="text-lg font-bold mb-2">健身的我</h3>
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="h-64 scroll-animate delay-200">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-3">
+              <div class="cube-face cube-front">
+                <img src="./assets/day04-7.jpg" alt="海鲜大餐" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">浴皇大帝</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day04-8.JPG" alt="三亚特色美食" class="cube-img">
+                <div class="cube-overlay">
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-8">
+        <div class="bg-white rounded-xl p-6 shadow-lg scroll-animate transform hover:shadow-xl transition-all">
+          <h3 class="text-xl font-semibold mb-4 flex items-center">
+            <i class="fa fa-clock-o text-ocean mr-2"></i> 行程安排
+          </h3>
+          <ul class="space-y-4">
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">上午</span>
+              <span>出发海棠湾</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">中午</span>
+              <span>酒店躺尸，点个小外卖</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">下午</span>
+              <span>参观酒店，游泳</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">傍晚</span>
+              <span>泡温泉，去健身房</span>
+            </li>
+            <li class="flex">
+              <span class="text-sanyaBlue font-medium w-24">晚上</span>
+              <span>到房间内又泡澡</span>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 第五天 -->
+  <section id="day5" class="py-20 bg-gradient-to-b from-white to-sand">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16 scroll-animate">
+        <span
+          class="inline-block px-4 py-1 bg-sanyaBlue text-white rounded-full text-sm font-medium mb-4 animate-ripple">第五天</span>
+        <h2 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-dark mb-4">蜈支洲岛-最白的海</h2>
+        <div class="w-20 h-1 bg-ocean mx-auto mb-6"></div>
+        <p class="text-gray-700 max-w-2xl mx-auto">
+          早起出发蜈支洲岛，经历了一上午暴晒，但景色很美，下午稍作休息，继续在酒店游玩，晚上出发三亚免税店，给宝宝带回去一个纪念礼物
+        </p>
+      </div>
+
+      <!-- 第五天图片展示区 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- 图片1 -->
+        <!-- 图片1 -->
+        <div class="h-64 scroll-animate">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-1">
+              <div class="cube-face cube-front">
+                <img src="./assets/day05-1.jpg" alt="亚龙湾全景" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-xl font-bold mb-2">岛上的山</h3>
+                  <p class="text-gray-300 text-sm">点击翻转查看更多</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day05-2.jpg" alt="亚龙湾日落" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="h-64 scroll-animate delay-100">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-2">
+              <div class="cube-face cube-front">
+                <img src="./assets/day05-3.jpg" alt="亚龙湾沙滩" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">创意这一块</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day05-4 (2).JPG" alt="清澈海水" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="h-64 scroll-animate delay-300">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-4">
+              <div class="cube-face cube-front">
+                <img src="./assets/day05-5.jpg" alt="亚龙湾酒店" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">海滩会记住我们</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day05-6.JPG" alt="酒店泳池" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="h-64 scroll-animate delay-200">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-3">
+              <div class="cube-face cube-front">
+                <img src="./assets/day05-7.jpg" alt="海鲜大餐" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2 ">一脸震惊</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day05-8.JPG" alt="三亚特色美食" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">嘿嘿嘿</h3>
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-1 ">
+          <div class="bg-white rounded-xl p-6 shadow-lg scroll-animate transform hover:shadow-xl transition-all">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fa fa-clock-o text-ocean mr-2"></i> 行程安排
+            </h3>
+            <ul class="space-y-4">
+              <li class="flex">
+                <span class="text-sanyaBlue font-medium w-24">上午</span>
+                <span>打卡整个蜈支洲岛</span>
+              </li>
+              <li class="flex">
+                <span class="text-sanyaBlue font-medium w-24">中午</span>
+                <span>回酒店大吃特吃</span>
+              </li>
+              <li class="flex">
+                <span class="text-sanyaBlue font-medium w-24">下午</span>
+                <span>在酒店睡觉休息</span>
+              </li>
+
+              <li class="flex">
+                <span class="text-sanyaBlue font-medium w-24">晚上</span>
+                <span>去免税城，回来泡澡</span>
+              </li>
+            </ul>
+          </div>
+
+
+        </div>
+      </div>
+  </section>
+
+  <!-- 第六天 -->
+  <section id="day6" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16 scroll-animate">
+        <span
+          class="inline-block px-4 py-1 bg-sanyaBlue text-white rounded-full text-sm font-medium mb-4 animate-ripple">第六天</span>
+        <h2 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-dark mb-4">返程</h2>
+        <div class="w-20 h-1 bg-ocean mx-auto mb-6"></div>
+        <p class="text-gray-700 max-w-2xl mx-auto">
+          最后一天飞机延误，我们上午在酒店沙滩捡贝壳，下午慢悠悠地前往琼海，踏上了回家的旅途，到机场就像走了快速通道，人十分少，最后我们回归了平淡的生活，结束了这段旅程
+        </p>
+      </div>
+
+      <!-- 第六天图片展示区 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- 图片1 -->
+        <!-- 图片1 -->
+        <div class="h-64 scroll-animate">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-1">
+              <div class="cube-face cube-front">
+                <img src="./assets/day06-1 (2).JPG" alt="亚龙湾全景" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-xl font-bold mb-2">酒店的足球门</h3>
+                  <p class="text-gray-300 text-sm">点击翻转查看更多</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day06-2.JPG" alt="亚龙湾日落" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="h-64 scroll-animate delay-100">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-2">
+              <div class="cube-face cube-front">
+                <img src="./assets/day06-3 (2).JPG" alt="亚龙湾沙滩" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">沙滩椅上的宝</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day06-4.JPG" alt="清澈海水" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="h-64 scroll-animate delay-300">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-4">
+              <div class="cube-face cube-front">
+                <img src="./assets/day06-5.JPG" alt="亚龙湾酒店" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">三亚没看到的绝美晚霞</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day06-6.jpg" alt="酒店泳池" class="cube-img">
+                <div class="cube-overlay">
+
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="h-64 scroll-animate delay-200">
+          <div class="cube-container h-full">
+            <div class="cube-box" id="cube1-3">
+              <div class="cube-face cube-front">
+                <img src="./assets/day06-7.JPG" alt="海鲜大餐" class="cube-img">
+                <div class="cube-overlay">
+                  <h3 class="text-lg font-bold mb-2">困困困困</h3>
+
+                  <p class="text-gray-300 text-sm">点击翻转</p>
+                </div>
+              </div>
+              <div class="cube-face cube-back">
+                <img src="./assets/day06-8.JPG" alt="三亚特色美食" class="cube-img">
+                <div class="cube-overlay">
+
+                  <p class="text-gray-300 text-sm">点击返回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-1 ">
+
+        <div
+          class="bg-white rounded-xl p-6 shadow-lg scroll-animate delay-200 transform hover:shadow-xl transition-all">
+          <h3 class="text-xl font-semibold mb-4 flex items-center">
+            <i class="fa fa-lightbulb-o text-ocean mr-2"></i> 旅途总结
+          </h3>
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-ocean mt-1 mr-2"></i>
+              <span>不完美也是这段经历的一部分</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-ocean mt-1 mr-2"></i>
+              <span>两个人的彼此陪伴最重要</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-ocean mt-1 mr-2"></i>
+              <span>每次会看都会发笑</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-ocean mt-1 mr-2"></i>
+              <span>期待我们的未来之旅</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 旅行记忆 -->
+  <section id="memories" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl mx-auto bg-sand rounded-2xl overflow-hidden shadow-xl scroll-animate">
+        <div class="grid grid-cols-1 md:grid-cols-2">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold mb-6">我们的三亚旅行笔记</h3>
+
+          <!-- 输入框区域 -->
+          <div class="mb-6">
+            <label for="memoryTitle" class="block text-gray-700 mb-2 text-sm font-medium">标题</label>
+            <input type="text" id="memoryTitle"
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sanyaBlue focus:border-transparent transition-all"
+              placeholder="请宝宝留下一些关于三亚的回忆">
+          </div>
+
+          <div class="mb-6">
+            <label for="memoryContent" class="block text-gray-700 mb-2 text-sm font-medium">我的回忆</label>
+            <textarea id="memoryContent" rows="6"
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sanyaBlue focus:border-transparent transition-all"
+              placeholder="在这里写下宝宝的三亚回忆..."></textarea>
+          </div>
+
+          <button id="saveMemory"
+            class="w-full px-6 py-3 bg-sanyaBlue text-white rounded-lg font-medium hover:bg-opacity-90 transition-all btn-pulse">
+            保存回忆
+          </button>
+
+          <!-- 已保存的回忆 -->
+          <div class="mt-8">
+            <h4 class="font-semibold mb-4">我们的三亚回忆</h4>
+            <div id="savedMemories" class="space-y-4 max-h-60 overflow-y-auto scrollbar-hide">
+              <!-- 回忆将通过JS动态添加 -->
+              <div class="text-gray-500 text-sm italic" id="noMemories">
+                宝宝写下第一个三亚记忆吧！
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- 提示消息 -->
+  <div id="toast"
+    class="toast fixed top-6 right-6 bg-dark text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center">
+    <i class="fa fa-check-circle mr-2"></i>
+    <span id="toastMessage">操作成功</span>
+  </div>
+
+  <!-- 结尾部分 -->
+  <section class="py-10 bg-dark text-white relative overflow-hidden">
+
+
+    <div class="flex justify-center gap-4">
+      <a href="https://pan.baidu.com/s/14WPX58Y_ihxEz7g2TE-3rQ?pwd=love " target="_blank" rel="noopener noreferrer"
+        class="px-8 py-3 bg-sanyaBlue text-white rounded-full font-medium hover:bg-opacity-90 transform hover:-translate-y-1 transition-all">
+        点我有惊喜
+      </a>
+    </div>
+
+    <div class="container mx-auto  mt-10 px-6 text-center relative z-10">
+      <h2 class="text-2xl font-bold mb-4 mx-auto transform hover:scale-105 transition-transform">三亚六日游</h2>
+      <p class="mb-6 max-w-md mx-auto">阳光、沙滩、海浪，一段难忘的热带风情之旅</p>
+      <p class="text-sm text-white/70 mx-auto">每一次旅行都充满美好回忆</p>
+    </div>
+    </div>
+
+
+
+  </section>
+
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function () {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-dark', 'bg-opacity-90');
+        navbar.classList.remove('bg-transparent');
+      } else {
+        navbar.classList.remove('bg-dark', 'bg-opacity-90');
+        navbar.classList.add('bg-transparent');
+      }
+    });
+
+    // 移动端菜单
+    const menuBtn = document.getElementById('menuBtn');
+    const closeMenu = document.getElementById('closeMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuLinks = mobileMenu.querySelectorAll('a');
+
+    menuBtn.addEventListener('click', function () {
+      mobileMenu.classList.remove('translate-x-full');
+    });
+
+    closeMenu.addEventListener('click', function () {
+      mobileMenu.classList.add('translate-x-full');
+    });
+
+    menuLinks.forEach(link => {
+      link.addEventListener('click', function () {
+        mobileMenu.classList.add('translate-x-full');
+      });
+    });
+
+    // 立体盒子翻转功能
+    const cubes = document.querySelectorAll('.cube-box');
+    cubes.forEach(cube => {
+      cube.addEventListener('click', function () {
+        this.classList.toggle('flipped');
+      });
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // 滚动动画
+    function checkScrollAnimations() {
+      const elements = document.querySelectorAll('.scroll-animate');
+      elements.forEach(element => {
+        const position = element.getBoundingClientRect();
+        // 元素进入视口
+        if (position.top < window.innerHeight && position.bottom >= 0) {
+          element.classList.add('visible');
+        }
+      });
+    }
+
+    // 初始检查和滚动时检查
+    window.addEventListener('load', checkScrollAnimations);
+    window.addEventListener('scroll', checkScrollAnimations);
+
+    // 旅行记忆本地存储功能 - 简化删除功能
+    const saveBtn = document.getElementById('saveMemory');
+    const titleInput = document.getElementById('memoryTitle');
+    const contentInput = document.getElementById('memoryContent');
+    const memoriesContainer = document.getElementById('savedMemories');
+    const noMemoriesMsg = document.getElementById('noMemories');
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    // 显示提示消息
+    function showToast(message, type = 'success') {
+      toastMessage.textContent = message;
+      toast.className = 'toast fixed top-6 right-6 px-6 py-3 rounded-lg shadow-lg z-50 flex items-center';
+
+      if (type === 'success') {
+        toast.classList.add('bg-green-500', 'text-white');
+        toast.innerHTML = `<i class="fa fa-check-circle mr-2"></i><span>${message}</span>`;
+      } else {
+        toast.classList.add('bg-red-500', 'text-white');
+        toast.innerHTML = `<i class="fa fa-exclamation-circle mr-2"></i><span>${message}</span>`;
+      }
+
+      toast.classList.add('active');
+
+      setTimeout(() => {
+        toast.classList.remove('active');
+      }, 3000);
+    }
+
+    // 加载已保存的回忆
+    function loadMemories() {
+      const memories = JSON.parse(localStorage.getItem('sanyaMemories') || '[]');
+
+      if (memories.length === 0) {
+        noMemoriesMsg.style.display = 'block';
+        return;
+      }
+
+      noMemoriesMsg.style.display = 'none';
+      memoriesContainer.innerHTML = '';
+
+      memories.forEach((memory, index) => {
+        const memoryEl = document.createElement('div');
+        memoryEl.className = 'bg-white p-4 rounded-lg shadow memory-card';
+        memoryEl.innerHTML = `
+          <h5 class="font-semibold text-sanyaBlue mb-2">${memory.title}</h5>
+          <p class="text-gray-600 text-sm mb-3">${memory.content}</p>
+          <p class="text-gray-400 text-xs">${memory.date}</p>
+          <button class="delete-btn mt-2 text-red-500 text-xs hover:underline transition-all flex items-center hover:text-red-700">
+            <i class="fa fa-trash-o mr-1"></i> 删除
+          </button>
+        `;
+        memoryEl.setAttribute('data-index', index);
+        memoriesContainer.appendChild(memoryEl);
+
+        // 添加删除按钮点击事件 - 直接删除无需确认
+        memoryEl.querySelector('.delete-btn').addEventListener('click', function () {
+          // 添加删除动画
+          memoryEl.classList.add('deleting');
+
+          // 动画结束后执行删除操作
+          setTimeout(() => {
+            const memories = JSON.parse(localStorage.getItem('sanyaMemories') || '[]');
+            const deletedMemory = memories.splice(index, 1)[0];
+            localStorage.setItem('sanyaMemories', JSON.stringify(memories));
+
+            // 显示删除成功提示
+            showToast(`"${deletedMemory.title}" 已删除`);
+
+            // 重新加载回忆列表
+            loadMemories();
+          }, 500);
+        });
+      });
+    }
+
+    // 保存新回忆
+    function saveMemory() {
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
+
+      if (!title || !content) {
+        showToast('请输入标题和内容', 'error');
+        return;
+      }
+
+      const memories = JSON.parse(localStorage.getItem('sanyaMemories') || '[]');
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      memories.push({
+        title,
+        content,
+        date: dateStr
+      });
+
+      localStorage.setItem('sanyaMemories', JSON.stringify(memories));
+
+      // 清空输入框并添加动画效果
+      titleInput.value = '';
+      contentInput.value = '';
+      titleInput.classList.add('scale-105');
+      contentInput.classList.add('scale-105');
+      setTimeout(() => {
+        titleInput.classList.remove('scale-105');
+        contentInput.classList.remove('scale-105');
+      }, 300);
+
+      showToast('回忆保存成功！');
+      loadMemories();
+    }
+
+    // 事件监听
+    saveBtn.addEventListener('click', saveMemory);
+
+    // 页面加载时加载回忆
+    window.addEventListener('load', loadMemories);
+
+    // 轮播图功能
+    document.addEventListener('DOMContentLoaded', function () {
+      const carouselItems = document.querySelectorAll('.carousel-item');
+      const indicators = document.querySelectorAll('.carousel-indicator');
+      let currentIndex = 0;
+      const intervalTime = 5000; // 5秒切换一次
+
+      // 切换到指定索引的轮播项
+      function showSlide(index) {
+        // 隐藏所有轮播项
+        carouselItems.forEach(item => {
+          item.classList.remove('active');
+        });
+
+        // 重置所有指示器
+        indicators.forEach(indicator => {
+          indicator.style.opacity = '0.5';
+        });
+
+        // 显示当前轮播项
+        carouselItems[index].classList.add('active');
+        indicators[index].style.opacity = '1';
+        currentIndex = index;
+      }
+
+      // 下一张轮播
+      function nextSlide() {
+        let newIndex = (currentIndex + 1) % carouselItems.length;
+        showSlide(newIndex);
+      }
+
+      // 自动轮播
+      let carouselInterval = setInterval(nextSlide, intervalTime);
+
+      // 点击指示器切换轮播
+      indicators.forEach(indicator => {
+        indicator.addEventListener('click', function () {
+          // 清除自动轮播计时器
+          clearInterval(carouselInterval);
+          // 切换到对应轮播项
+          showSlide(parseInt(this.dataset.index));
+          // 重新启动自动轮播
+          carouselInterval = setInterval(nextSlide, intervalTime);
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>
